@@ -1,8 +1,10 @@
 package no.hvl.dat110.rpc;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import no.hvl.dat110.TODO;
+import no.hvl.dat110.messaging.MessageConfig;
 
 public class RPCUtils {
 
@@ -12,13 +14,15 @@ public class RPCUtils {
 	// RPC message syntax [rpcid,parameter/return value]
 	
 	public static byte[] marshallString(byte rpcid, String str) {
-
-		byte[] encoded;
+		
+		byte[] encoded = new byte[MessageConfig.SEGMENTSIZE];
 
 		// TODO: marshall RPC identifier and string into byte array
-
-		if (true) {
-			throw new UnsupportedOperationException(TODO.method());
+		encoded[0]=rpcid;
+	
+		
+		for(int i =0; i < str.length(); i++) {
+			encoded[i+1]=(byte) str.charAt(i);
 		}
 
 		return encoded;
@@ -26,27 +30,27 @@ public class RPCUtils {
 
 	public static String unmarshallString(byte[] data) {
 
-		String decoded;
+	
+		String decoded ="";
+		byte[] temp= new byte[MessageConfig.SEGMENTSIZE];
+		int size=data[0];
+		for(int i =0; i < data.length-1; i++) {
+			temp[i]=data[i+1];
+		}
+		
+		decoded= new String(temp).trim();
 
 		// TODO: unmarshall String contained in data into decoded
-
-		if (true) {
-			throw new UnsupportedOperationException(TODO.method());
-		}
 
 		return decoded;
 	}
 
 	public static byte[] marshallVoid(byte rpcid) {
 
-		byte[] encoded;
+		byte[] encoded = new byte[128];
 
 		// TODO: marshall RPC identifier in case of void type
-
-		if (true) {
-			throw new UnsupportedOperationException(TODO.method());
-		}
-
+		encoded[0]=rpcid;
 		return encoded;
 
 	}
@@ -54,6 +58,12 @@ public class RPCUtils {
 	public static void unmarshallVoid(byte[] data) {
 
 		// TODO: unmarshall void type
+		byte[] encoded = new byte[128];
+		
+
+		// TODO: marshall RPC identifier in case of void type
+		
+		return;
 	}
 
 	public static byte[] marshallBoolean(byte rpcid, boolean b) {
@@ -79,12 +89,17 @@ public class RPCUtils {
 
 	public static byte[] marshallInteger(byte rpcid, int x) {
 
-		byte[] encoded;
+		byte[] encoded= new byte[5];
 
 		// TODO: marshall RPC identifier and string into byte array
-
-		if (true) {
-			throw new UnsupportedOperationException(TODO.method());
+		
+		ByteBuffer b = ByteBuffer.allocate(4);
+		b.putInt(x);
+		
+		encoded[0] = rpcid;
+		
+		for (int i = 1; i < encoded.length; i++) {
+			encoded[i] = b.get(i-1);
 		}
 
 		return encoded;
@@ -92,14 +107,17 @@ public class RPCUtils {
 
 	public static int unmarshallInteger(byte[] data) {
 
-		int decoded;
+		int decoded=0;
 
 		// TODO: unmarshall integer contained in data
 
-		if (true) {
-			throw new UnsupportedOperationException(TODO.method());
-		}
 
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		for (int i = 1; i < data.length; i++) {
+				buffer.put(i-1, data[i]);
+		}
+		decoded=buffer.getInt();
+		
 		return decoded;
 
 	}

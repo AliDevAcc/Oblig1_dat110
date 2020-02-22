@@ -15,5 +15,14 @@ public class TODO {
 	   return "Konstruktøren for klassen " + className + " er ikke implementert";
 		
 	}
-
+public static void main(String[] args) {
+//	byte [] b= new byte[2];
+//	b[0]="a";
+//	b[1]="a";
+//	b[2]="a";
+//	String s="";
+//	for(int i=0; i< 4; i++) {
+//	s+=s
+	}
 }
+
